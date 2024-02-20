@@ -7,7 +7,7 @@ import { GrOverview } from "react-icons/gr";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { TbMoneybag } from "react-icons/tb";
 
-interface NavLink {
+type NavLink = {
   name: string;
   href: string;
   icon: React.ReactElement;
