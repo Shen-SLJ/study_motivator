@@ -4,6 +4,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GrOverview } from "react-icons/gr";
+import { MdOutlineTaskAlt } from "react-icons/md";
 import { TbMoneybag } from "react-icons/tb";
 
 interface NavLink {
@@ -15,6 +16,7 @@ interface NavLink {
 const links: Array<NavLink> = [
   { name: "Overview", href: "/overview", icon: <GrOverview /> },
   { name: "Shop", href: "/shop", icon: <TbMoneybag /> },
+  { name: "Tasks", href: "/tasks", icon: <MdOutlineTaskAlt /> }
 ];
 
 export default function NavLinks() {
