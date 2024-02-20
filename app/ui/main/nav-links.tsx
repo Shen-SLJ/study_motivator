@@ -1,4 +1,8 @@
+"use client";
+
+import clsx from "clsx";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { GrOverview } from "react-icons/gr";
 import { TbMoneybag } from "react-icons/tb";
 
@@ -14,12 +18,17 @@ const links: Array<NavLink> = [
 ];
 
 export default function NavLinks() {
+  const curPath = usePathname();
+
   return (
     <>
       {/* links */}
       {links.map((link) => {
         return (
-          <div key={link.name} className="flex mb-3 pl-4 py-1 text-sm text-white bg-[#474F7A] rounded-lg items-center">
+          <div
+            key={link.name}
+            className={clsx("flex mb-3 pl-4 py-1 text-sm text-white bg-[#474F7A] rounded-lg items-center", curPath === link.href && "bg-[#81689D]")}
+          >
             <div className="mr-2">{link.icon}</div>
             <Link href={link.href}>{link.name}</Link>
           </div>
