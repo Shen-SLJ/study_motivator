@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="mr-3">
         <SideNav />
       </div>
-      <div>{children}</div>
+      <div className="grow">{children}</div>
     </div>
   );
 }
