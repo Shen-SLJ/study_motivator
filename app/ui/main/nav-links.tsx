@@ -11,12 +11,12 @@ type NavLink = {
   name: string;
   href: string;
   icon: React.ReactElement;
-}
+};
 
 const links: Array<NavLink> = [
   { name: "Overview", href: "/overview", icon: <GrOverview /> },
   { name: "Shop", href: "/shop", icon: <TbMoneybag /> },
-  { name: "Tasks", href: "/tasks", icon: <MdOutlineTaskAlt /> }
+  { name: "Tasks", href: "/tasks", icon: <MdOutlineTaskAlt /> },
 ];
 
 export default function NavLinks() {
@@ -27,13 +27,14 @@ export default function NavLinks() {
       {/* links */}
       {links.map((link) => {
         return (
-          <div
-            key={link.name}
+          <Link
+            key={link.href}
             className={clsx("flex mb-3 pl-4 py-1 text-sm text-white bg-[#474F7A] rounded-lg items-center", curPath === link.href && "bg-[#81689D]")}
+            href={link.href}
           >
             <div className="mr-2">{link.icon}</div>
-            <Link href={link.href}>{link.name}</Link>
-          </div>
+            {link.name}
+          </Link>
         );
       })}
     </>
