@@ -4,7 +4,7 @@ import NavLinks from "./nav-links";
 
 export default function SideNav() {
   return (
-    <div className="flex flex-col px-5 pt-6 pb-7 min-h-screen">
+    <div className="flex flex-col h-full">
       <Image src="/motivate-logo.png" className="w-40" width={801} height={806} alt="Motivate logo" />
       <div className="grow">
         <NavLinks />
