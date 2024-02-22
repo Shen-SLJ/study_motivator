@@ -31,7 +31,7 @@ export default function TaskTable() {
       <input
         className="px-5 py-2 mb-5 rounded-lg bg-[#2D3662] text-[#FFD0EC] text-sm placeholder:text-[#FFD0EC] placeholder:text-[15px] focus:placeholder:text-transparent caret-white w-4/12 min-w-52"
         placeholder="Search"
-        onChange={(e) => setSearch(e.target.value.toLowerCase())}
+        onChange={(e) => setSearch(e.target.value)}
         value={search}
       />
 
@@ -56,7 +56,8 @@ export default function TaskTable() {
               {tasks.map((task) => (
                 <>
                   {/* Search Render Logic */}
-                  {(!search || task.description.search(`${search}`) !== -1) && (
+                  {/* Lower case for case insensitive searching */}
+                  {(!search || task.description.toLowerCase().search(`${search.toLowerCase()}`) !== -1) && (
                     <div key={task.id} className="flex items-center">
                       <span className="basis-6/12">{task.description}</span>
                       <span className="basis-2/12">{task.category}</span>
