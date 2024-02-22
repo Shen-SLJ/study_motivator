@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 export default function TaskTable() {
   const [tasks, setTasks] = useState<Array<Task>>([]);
   const [loading, setLoading] = useState<Boolean>(true);
+  const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     const fetchTasks = async (): Promise<Array<Task>> => {
@@ -22,9 +23,18 @@ export default function TaskTable() {
     });
   }, []);
 
+  console.log(search)
+
   return (
     <div className="flex flex-col h-full">
-      <div className="px-5 py-2 mb-5 rounded-lg text-[#FFD0EC] text-[15px] bg-[#2D3662] w-4/12 min-w-52">Search</div>
+      {/* Search */}
+      <input
+        className="px-5 py-2 mb-5 rounded-lg bg-[#2D3662] text-[#FFD0EC] text-sm placeholder:text-[#FFD0EC] placeholder:text-[15px] focus:placeholder:text-transparent caret-white w-4/12 min-w-52"
+        placeholder="Search"
+        onChange={(e) => setSearch(e.target.value.toLowerCase())}
+        value={search}
+      />
+
       {/* TABLE. Take up 100% of remaining container height. */}
       <div className="h-full px-5 pt-4 bg-[#2D3662] rounded-lg">
         {/* Table Headers */}
@@ -44,14 +54,19 @@ export default function TaskTable() {
           ) : (
             <>
               {tasks.map((task) => (
-                <div key={task.id} className="flex items-center">
-                  <span className="basis-6/12">{task.description}</span>
-                  <span className="basis-2/12">{task.category}</span>
-                  <span className="basis-2/12">{task.earn}</span>
-                  <span className="basis-2/12 pl-0.5">
-                    <Image src="/tasktable-go.png" width="14" height="17" alt="Resume task" />
-                  </span>
-                </div>
+                <>
+                  {/* Search Render Logic */}
+                  {(!search || task.description.search(`${search}`) !== -1) && (
+                    <div key={task.id} className="flex items-center">
+                      <span className="basis-6/12">{task.description}</span>
+                      <span className="basis-2/12">{task.category}</span>
+                      <span className="basis-2/12">{task.earn}</span>
+                      <span className="basis-2/12 pl-0.5">
+                        <Image src="/tasktable-go.png" width="14" height="17" alt="Resume task" />
+                      </span>
+                    </div>
+                  )}
+                </>
               ))}
             </>
           )}
