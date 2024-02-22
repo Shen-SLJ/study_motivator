@@ -23,8 +23,6 @@ export default function TaskTable() {
     });
   }, []);
 
-  console.log(search)
-
   return (
     <div className="flex flex-col h-full">
       {/* Search */}
