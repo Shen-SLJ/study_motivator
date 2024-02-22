@@ -56,7 +56,7 @@ export default function TaskTable() {
                   {/* Search Render Logic */}
                   {/* Lower case for case insensitive searching */}
                   {(!search || task.description.toLowerCase().search(`${search.toLowerCase()}`) !== -1) && (
-                    <div key={task.id} className="flex items-center">
+                    <div key={task.id} className="flex items-center mb-3">
                       <span className="basis-6/12">{task.description}</span>
                       <span className="basis-2/12">{task.category}</span>
                       <span className="basis-2/12">{task.earn}</span>
