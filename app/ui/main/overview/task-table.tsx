@@ -11,7 +11,7 @@ export default function TaskTable() {
   const [tasks, setTasks] = useState<Array<Task>>([]);
   const [loading, setLoading] = useState<Boolean>(true);
   const [search, setSearch] = useState<string>("");
-  let firstTaskFound = false;
+  const filteredTasks: Array<Task> = [];
 
   useEffect(() => {
     const fetchTasks = async (): Promise<Array<Task>> => {
@@ -23,6 +23,13 @@ export default function TaskTable() {
       setLoading(false);
     });
   }, []);
+
+  // Search: Filter tasks to render according to search input
+  filteredTasks.forEach((task) => {
+    if (task.description.toLowerCase().search(`${search.toLowerCase()}`) !== -1) {
+      filteredTasks.push(task);
+    }
+  });
 
   return (
     <div className="flex flex-col h-full">
@@ -54,33 +61,26 @@ export default function TaskTable() {
             <>
               {/* Search Logic */}
               {/* Lower case for case insensitive searching */}
-              {tasks.map((task) => {
-                const shouldDisplayTask = !search || task.description.toLowerCase().search(`${search.toLowerCase()}`) !== -1;
-                const divider = firstTaskFound && <hr className="border-[#4A5487] mb-3" />;
-                if (shouldDisplayTask) {
-                  firstTaskFound = true;
-                }
+              {filteredTasks.map((task, i) => {
                 return (
                   <>
-                    {shouldDisplayTask && (
-                      <>
-                        {divider}
-                        <div key={task.id} className="flex items-center mb-3">
-                          <span className="basis-6/12">{task.description}</span>
-                          <span className="basis-2/12">{task.category}</span>
-                          <span className="basis-2/12">{task.earn}</span>
-                          <span className="basis-2/12 pl-0.5">
-                            <Image src="/tasktable-go.png" width="14" height="17" alt="Resume task" />
-                          </span>
-                        </div>
-                      </>
-                    )}
+                    {i !== 0 && <hr className="border-[#4A5487] mb-3" />}
+                    <div key={task.id} className="flex items-center mb-3">
+                      <span className="basis-6/12">{task.description}</span>
+                      <span className="basis-2/12">{task.category}</span>
+                      <span className="basis-2/12">{task.earn}</span>
+                      <span className="basis-2/12 pl-0.5">
+                        <Image src="/tasktable-go.png" width="14" height="17" alt="Resume task" />
+                      </span>
+                    </div>
                   </>
                 );
               })}
             </>
           )}
         </div>
+
+        {/* New Task */}
 
       </div>
     </div>
