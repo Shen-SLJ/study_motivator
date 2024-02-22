@@ -25,7 +25,7 @@ export default function TaskTable() {
   }, []);
 
   // Search: Filter tasks to render according to search input
-  filteredTasks.forEach((task) => {
+  tasks.forEach((task) => {
     if (task.description.toLowerCase().search(`${search.toLowerCase()}`) !== -1) {
       filteredTasks.push(task);
     }
@@ -59,29 +59,24 @@ export default function TaskTable() {
             <p>Loading...</p>
           ) : (
             <>
-              {/* Search Logic */}
-              {/* Lower case for case insensitive searching */}
-              {filteredTasks.map((task, i) => {
-                return (
-                  <>
-                    {i !== 0 && <hr className="border-[#4A5487] mb-3" />}
-                    <div key={task.id} className="flex items-center mb-3">
-                      <span className="basis-6/12">{task.description}</span>
-                      <span className="basis-2/12">{task.category}</span>
-                      <span className="basis-2/12">{task.earn}</span>
-                      <span className="basis-2/12 pl-0.5">
-                        <Image src="/tasktable-go.png" width="14" height="17" alt="Resume task" />
-                      </span>
-                    </div>
-                  </>
-                );
-              })}
+              {filteredTasks.map((task, i) => (
+                <>
+                  {i !== 0 && <hr className="border-[#3C477D] mb-3" />}
+                  <div key={task.id} className="flex items-center mb-3">
+                    <span className="basis-6/12">{task.description}</span>
+                    <span className="basis-2/12">{task.category}</span>
+                    <span className="basis-2/12">{task.earn}</span>
+                    <span className="basis-2/12 pl-0.5">
+                      <Image src="/tasktable-go.png" width="14" height="17" alt="Resume task" />
+                    </span>
+                  </div>
+                </>
+              ))}
             </>
           )}
         </div>
 
         {/* New Task */}
-
       </div>
     </div>
   );
