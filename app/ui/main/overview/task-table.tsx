@@ -13,15 +13,16 @@ export default function TaskTable() {
   const [search, setSearch] = useState<string>("");
   const filteredTasks: Array<Task> = [];
 
-  useEffect(() => {
-    const fetchTasks = async (): Promise<Array<Task>> => {
-      const tasksResponse = await fetch("api/tasks");
-      return tasksResponse.json();
-    };
-    fetchTasks().then((tasks) => {
+  const fetchTasks = async () => {
+    const tasksResponse = await fetch("api/tasks");
+    tasksResponse.json().then((tasks) => {
       setTasks(tasks);
       setLoading(false);
     });
+  };
+
+  useEffect(() => {
+    fetchTasks();
   }, []);
 
   // Search: Filter tasks to render according to search input
