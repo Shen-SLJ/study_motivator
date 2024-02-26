@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Task } from "@/app/api/tasks/route";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 /**
  * Task table. Table frows to fill remaining available space of container.
@@ -36,14 +37,14 @@ export default function TaskTable() {
     <div className="flex flex-col h-full">
       {/* SEARCH BAR */}
       <input
-        className="px-5 py-2 mb-5 rounded-lg bg-[#2D3662] text-[#FFD0EC] text-sm placeholder:text-[#FFD0EC] placeholder:text-[15px] focus:placeholder:text-transparent caret-white w-4/12 min-w-52"
+        className="px-5 py-2.5 mb-5 rounded-lg bg-[#2D3662] text-[#FFD0EC] text-sm placeholder:text-[#FFD0EC] placeholder:text-[15px] focus:placeholder:text-transparent caret-white w-4/12 min-w-52"
         placeholder="Search"
         onChange={(e) => setSearch(e.target.value)}
         value={search}
       />
 
       {/* TABLE */}
-      <div className="h-full px-5 pt-4 bg-[#2D3662] rounded-lg">
+      <div className="relative h-full px-5 pt-4 bg-[#2D3662] rounded-lg">
         {/* Table Headers */}
         <div className="flex text-white text-sm mb-2">
           <span className="basis-6/12">Description</span>
@@ -78,6 +79,10 @@ export default function TaskTable() {
         </div>
 
         {/* New Task */}
+        <Link href="#" className="absolute bottom-6 right-6 p-3 rounded-lg bg-[#FFD0EC] text-[#81689D] text-sm">
+          + New Task
+        </Link>
+
       </div>
     </div>
   );
