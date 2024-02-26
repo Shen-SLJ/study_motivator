@@ -86,3 +86,5 @@ export default function TaskTable() {
 // Self Notes
 // We need flex flex-col for top div, otherwise table h-full will cause table overshoot at bottom of page
 // due to not accounting for search bar height (h-full uses 100% of parent div's height value as px)
+
+// Empty regex returns empty matches for any string at index 0
