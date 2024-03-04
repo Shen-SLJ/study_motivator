@@ -147,6 +147,7 @@ function TaskTableEntry({ content, id, column, type }: { content: string | numbe
   );
 }
 
+
 // Self Notes
 // We need flex flex-col for top div, otherwise table h-full will cause table overshoot at bottom of page
 // due to not accounting for search bar height (h-full uses 100% of parent div's height value as px)
@@ -164,4 +165,10 @@ function TaskTableEntry({ content, id, column, type }: { content: string | numbe
 // Type errors https://stackoverflow.com/questions/71193818/react-onclick-argument-of-type-eventtarget-is-not-assignable-to-parameter-of-t
 
 // Removing spinner in integer input
+// Note: [...], where ... = CSS selector. & = this element
+// https://tailwindcss.com/docs/hover-focus-and-other-states#using-arbitrary-variants.
+// https://tailwindcss.com/docs/adding-custom-styles#arbitrary-properties
+// https://stackoverflow.com/questions/73666015/nested-brackets-and-ampersand-usage-in-tailwind-ui-examples 
+// https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
 // https://stackoverflow.com/questions/75879418/how-to-remove-arrows-in-input-type-number-inside-the-input 
+// https://stackoverflow.com/questions/71296535/how-to-remove-arrow-on-input-type-number-with-tailwind-css
