@@ -104,13 +104,13 @@ export default function TaskTable() {
 function TaskTableEntry({ content, id }: { content: string | number; id: string }) {
   const [editing, setEditing] = useState(false);
   const [displayed, setDisplayed] = useState(content);
-  const thisComponent = useRef<HTMLInputElement>(null);
+  const inputElement = useRef<HTMLInputElement>(null);
 
   const editEntryWithID = editTaskTableEntry.bind(null, id);
 
   // Clicking outside the element will return it to default display mode
   function handleDocumentClick(e: MouseEvent) {
-    if (thisComponent.current && !thisComponent.current.contains(e.target as Node)) {
+    if (inputElement.current && !inputElement.current.contains(e.target as Node)) {
       setEditing(false)
     }
   }
@@ -129,7 +129,7 @@ function TaskTableEntry({ content, id }: { content: string | number; id: string 
           name="entryText"
           value={displayed}
           onChange={(e) => setDisplayed(e.target.value)}
-          ref={thisComponent}
+          ref={inputElement}
           autoFocus
         />
       </form>
