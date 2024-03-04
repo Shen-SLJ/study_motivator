@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { editTaskTableEntry } from "./actions";
 
+export type TaskTableHeader = "description" | "group" | "earn"
+
 /**
  * Task table. Table frows to fill remaining available space of container.
  */
@@ -67,13 +69,13 @@ export default function TaskTable() {
                   {i !== 0 && <hr className="border-[#3C477D] mb-3" />}
                   <div key={task.id} className="flex items-center mb-3">
                     <div className="basis-6/12">
-                      <TaskTableEntry content={task.description} id={task.id} />
+                      <TaskTableEntry content={task.description} id={task.id} column="description" />
                     </div>
                     <div className="basis-2/12">
-                      <TaskTableEntry content={task.category} id={task.id} />
+                      <TaskTableEntry content={task.category} id={task.id} column="group" />
                     </div>
                     <div className="basis-2/12">
-                      <TaskTableEntry content={task.earn} id={task.id} />
+                      <TaskTableEntry content={task.earn} id={task.id} column="earn" />
                     </div>
                     <span className="basis-2/12 pl-0.5">
                       <Image src="/tasktable-go.png" width="14" height="17" alt="Resume task" />
@@ -99,14 +101,15 @@ export default function TaskTable() {
  *
  * @param content the content that should be displayed by the entry
  * @param id the id for the entry
+ * @param column the column the entry is associated with
  * @todo Edit db on edit completion. Fix editing field padding for task table entry.
  */
-function TaskTableEntry({ content, id }: { content: string | number; id: string }) {
+function TaskTableEntry({ content, id, column }: { content: string | number; id: string, column: TaskTableHeader }) {
   const [editing, setEditing] = useState(false);
   const [displayed, setDisplayed] = useState(content);
   const inputElement = useRef<HTMLInputElement>(null);
-
-  const editEntryWithID = editTaskTableEntry.bind(null, id);
+  
+  const editEntryWithID = editTaskTableEntry.bind(null, id, column);
 
   // Clicking outside the element will return it to default display mode
   function handleDocumentClick(e: MouseEvent) {
