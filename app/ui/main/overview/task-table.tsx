@@ -154,3 +154,6 @@ function TaskTableEntry({ content, id }: { content: string | number; id: string 
 // Refs:
 // Detect click outside: https://stackoverflow.com/questions/32553158/detect-click-outside-react-component, https://react.dev/reference/react-dom/components/common see ref attribute, https://developer.mozilla.org/en-US/docs/Web/API/Node/contains.
 // useRef is null to ensure correct type for ref attribute in common elements (components)
+
+// Events:
+// Type errors https://stackoverflow.com/questions/71193818/react-onclick-argument-of-type-eventtarget-is-not-assignable-to-parameter-of-t
