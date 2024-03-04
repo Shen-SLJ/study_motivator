@@ -1,4 +1,4 @@
-import TaskTable from "@/app/ui/main/overview/task-table";
+import TaskTable from "@/app/ui/main/tasks/task-table";
 
 export default function Overview() {
   return (

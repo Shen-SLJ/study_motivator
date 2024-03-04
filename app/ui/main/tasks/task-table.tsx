@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Task } from "@/app/api/tasks/route";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { editTaskTableEntry } from "./actions";
+import { editTaskTableEntry } from "@/app/(main)/tasks/actions";
 
 export type TaskTableHeader = "description" | "group" | "earn"
 

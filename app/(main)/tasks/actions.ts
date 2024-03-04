@@ -2,7 +2,7 @@
 
 import { sql } from "@vercel/postgres";
 import { z } from "zod";
-import { TaskTableHeader } from "./task-table";
+import { TaskTableHeader } from "../../ui/main/tasks/task-table";
 
 const entryUpdateSchema = z.object({
   entryText: z.string(),
