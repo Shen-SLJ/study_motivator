@@ -109,7 +109,7 @@ function TaskTableEntry({ content, id }: { content: string | number, id: string 
 
   if (editing) {
     return (
-      <form action={editEntryWithID}>
+      <form action={editEntryWithID} onSubmit={()=>setEditing(false)}>
         <input className="caret-white bg-transparent rounded-lg" name="entryText" value={displayed} onChange={(e) => setDisplayed(e.target.value)} autoFocus />
       </form>
     );
