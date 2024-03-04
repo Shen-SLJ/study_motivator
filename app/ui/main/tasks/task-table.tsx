@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Task } from "@/app/api/tasks/route";
-import { useEffect, useRef, useState } from "react";
+import { HTMLInputTypeAttribute, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { editTaskTableEntry } from "@/app/(main)/tasks/actions";
 
@@ -10,6 +10,7 @@ export type TaskTableHeader = "description" | "group" | "earn"
 
 /**
  * Task table. Table frows to fill remaining available space of container.
+ * @todo Edit filteredTasks on task table entry edit
  */
 export default function TaskTable() {
   const [tasks, setTasks] = useState<Array<Task>>([]);
@@ -75,7 +76,7 @@ export default function TaskTable() {
                       <TaskTableEntry content={task.category} id={task.id} column="group" />
                     </div>
                     <div className="basis-2/12">
-                      <TaskTableEntry content={task.earn} id={task.id} column="earn" />
+                      <TaskTableEntry content={task.earn} id={task.id} column="earn" type="number" />
                     </div>
                     <span className="basis-2/12 pl-0.5">
                       <Image src="/tasktable-go.png" width="14" height="17" alt="Resume task" />
@@ -102,9 +103,9 @@ export default function TaskTable() {
  * @param content the content that should be displayed by the entry
  * @param id the id for the entry
  * @param column the column the entry is associated with
- * @todo Edit db on edit completion. Fix editing field padding for task table entry.
+ * @param type the type of input when editing. default is text
  */
-function TaskTableEntry({ content, id, column }: { content: string | number; id: string, column: TaskTableHeader }) {
+function TaskTableEntry({ content, id, column, type }: { content: string | number; id: string, column: TaskTableHeader, type?: HTMLInputTypeAttribute }) {
   const [editing, setEditing] = useState(false);
   const [displayed, setDisplayed] = useState(content);
   const inputElement = useRef<HTMLInputElement>(null);
@@ -128,11 +129,12 @@ function TaskTableEntry({ content, id, column }: { content: string | number; id:
     return (
       <form action={editEntryWithID} onSubmit={() => setEditing(false)}>
         <input
-          className="caret-white bg-transparent rounded-lg"
+          className="caret-white bg-transparent rounded-lg [&::-webkit-inner-spin-button]:appearance-none"
           name="entryText"
           value={displayed}
           onChange={(e) => setDisplayed(e.target.value)}
           ref={inputElement}
+          type={type}
           autoFocus
         />
       </form>
@@ -160,3 +162,6 @@ function TaskTableEntry({ content, id, column }: { content: string | number; id:
 
 // Events:
 // Type errors https://stackoverflow.com/questions/71193818/react-onclick-argument-of-type-eventtarget-is-not-assignable-to-parameter-of-t
+
+// Removing spinner in integer input
+// https://stackoverflow.com/questions/75879418/how-to-remove-arrows-in-input-type-number-inside-the-input 
