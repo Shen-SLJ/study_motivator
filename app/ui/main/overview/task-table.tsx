@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Task } from "@/app/api/tasks/route";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { editTaskTableEntry } from "./actions";
 
 /**
  * Task table. Table frows to fill remaining available space of container.
@@ -65,9 +66,15 @@ export default function TaskTable() {
                 <>
                   {i !== 0 && <hr className="border-[#3C477D] mb-3" />}
                   <div key={task.id} className="flex items-center mb-3">
-                    <span className="basis-6/12">{task.description}</span>
-                    <span className="basis-2/12">{task.category}</span>
-                    <span className="basis-2/12">{task.earn}</span>
+                    <div className="basis-6/12">
+                      <TaskTableEntry content={task.description} id={task.id} />
+                    </div>
+                    <div className="basis-2/12">
+                      <TaskTableEntry content={task.category} id={task.id} />
+                    </div>
+                    <div className="basis-2/12">
+                      <TaskTableEntry content={task.earn} id={task.id} />
+                    </div>
                     <span className="basis-2/12 pl-0.5">
                       <Image src="/tasktable-go.png" width="14" height="17" alt="Resume task" />
                     </span>
@@ -82,9 +89,35 @@ export default function TaskTable() {
         <Link href="#" className="absolute bottom-6 right-6 p-3 rounded-lg bg-[#FFD0EC] text-[#81689D] text-sm">
           + New Task
         </Link>
-
       </div>
     </div>
+  );
+}
+
+/**
+ * An entry in the task table. Can be clicked on to edit contents.
+ *
+ * @param content the content that should be displayed by the entry
+ * @param id the id for the entry
+ * @todo Edit db on edit completion. Fix editing field padding for task table entry.
+ */
+function TaskTableEntry({ content, id }: { content: string | number, id: string }) {
+  const [editing, setEditing] = useState(false);
+  const [displayed, setDisplayed] = useState(content);
+
+  const editEntryWithID = editTaskTableEntry.bind(null, id)
+
+  if (editing) {
+    return (
+      <form action={editEntryWithID}>
+        <input className="caret-white bg-transparent rounded-lg" name="entryText" value={displayed} onChange={(e) => setDisplayed(e.target.value)} autoFocus />
+      </form>
+    );
+  }
+  return (
+    <button className="hover:bg-[#525A86] rounded-lg" onClick={() => setEditing(true)}>
+      {displayed}
+    </button>
   );
 }
 
@@ -93,3 +126,6 @@ export default function TaskTable() {
 // due to not accounting for search bar height (h-full uses 100% of parent div's height value as px)
 
 // Empty regex returns empty matches for any string at index 0
+
+// autoFocus for input element in TaskTableEntry is React's implementation of autofocus
+// https://react.dev/reference/react-dom/components/input
