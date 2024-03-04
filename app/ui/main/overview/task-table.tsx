@@ -108,7 +108,7 @@ function TaskTableEntry({ content, id, column }: { content: string | number; id:
   const [editing, setEditing] = useState(false);
   const [displayed, setDisplayed] = useState(content);
   const inputElement = useRef<HTMLInputElement>(null);
-  
+
   const editEntryWithID = editTaskTableEntry.bind(null, id, column);
 
   // Clicking outside the element will return it to default display mode
@@ -139,7 +139,7 @@ function TaskTableEntry({ content, id, column }: { content: string | number; id:
     );
   }
   return (
-    <button className="hover:bg-[#525A86] rounded-lg" onClick={() => setEditing(true)}>
+    <button className="relative right-1 px-1 hover:bg-[#525A86] rounded-lg" onClick={() => setEditing(true)}>
       {displayed}
     </button>
   );
