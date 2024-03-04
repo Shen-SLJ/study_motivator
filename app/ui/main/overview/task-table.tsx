@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Task } from "@/app/api/tasks/route";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { editTaskTableEntry } from "./actions";
 
@@ -101,16 +101,37 @@ export default function TaskTable() {
  * @param id the id for the entry
  * @todo Edit db on edit completion. Fix editing field padding for task table entry.
  */
-function TaskTableEntry({ content, id }: { content: string | number, id: string }) {
+function TaskTableEntry({ content, id }: { content: string | number; id: string }) {
   const [editing, setEditing] = useState(false);
   const [displayed, setDisplayed] = useState(content);
+  const thisComponent = useRef<HTMLInputElement>(null);
 
-  const editEntryWithID = editTaskTableEntry.bind(null, id)
+  const editEntryWithID = editTaskTableEntry.bind(null, id);
+
+  // Clicking outside the element will return it to default display mode
+  function handleDocumentClick(e: MouseEvent) {
+    if (thisComponent.current && !thisComponent.current.contains(e.target as Node)) {
+      setEditing(false)
+    }
+  }
+  useEffect(() => {
+    document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    }
+  });
 
   if (editing) {
     return (
-      <form action={editEntryWithID} onSubmit={()=>setEditing(false)}>
-        <input className="caret-white bg-transparent rounded-lg" name="entryText" value={displayed} onChange={(e) => setDisplayed(e.target.value)} autoFocus />
+      <form action={editEntryWithID} onSubmit={() => setEditing(false)}>
+        <input
+          className="caret-white bg-transparent rounded-lg"
+          name="entryText"
+          value={displayed}
+          onChange={(e) => setDisplayed(e.target.value)}
+          ref={thisComponent}
+          autoFocus
+        />
       </form>
     );
   }
@@ -129,3 +150,7 @@ function TaskTableEntry({ content, id }: { content: string | number, id: string 
 
 // autoFocus for input element in TaskTableEntry is React's implementation of autofocus
 // https://react.dev/reference/react-dom/components/input
+
+// Refs:
+// Detect click outside: https://stackoverflow.com/questions/32553158/detect-click-outside-react-component, https://react.dev/reference/react-dom/components/common see ref attribute, https://developer.mozilla.org/en-US/docs/Web/API/Node/contains.
+// useRef is null to ensure correct type for ref attribute in common elements (components)
