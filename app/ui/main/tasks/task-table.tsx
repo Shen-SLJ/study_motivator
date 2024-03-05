@@ -5,6 +5,7 @@ import { Task } from "@/app/api/tasks/route";
 import { Dispatch, HTMLInputTypeAttribute, SetStateAction, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { editTaskTableDBEntry } from "@/app/(main)/tasks/actions";
+import { isNumberParsable } from "@/lib/utils";
 
 export type TaskTableHeader = "description" | "group" | "earn";
 
@@ -97,14 +98,14 @@ export default function TaskTable() {
 }
 
 /**
- * An entry in the task table. Can be clicked on to edit contents.
+ * An entry in the task table. Can be clicked on to edit contents. 
  *
- * @param content the content that should be displayed by the entry
+ * @param content the content that should be displayed by the entry. Must be parsable to the listed type for the following column values: 'earn' - number
  * @param id the id for the entry
  * @param column the column the entry is associated with
  * @param type the type of input when editing. default is text
- * @param tasks the unfiltered list of tasks presented in the table
- * @param setTasks setter in TaskTable to set the tasks state
+ * @param tasks the unfiltered list of tasks presented in the task table
+ * @param setTasks setter from the task table to set the list of tasks
  */
 function TaskTableEntry({
   content,
@@ -112,7 +113,7 @@ function TaskTableEntry({
   column,
   type,
   tasks,
-  setTasks,
+  setTasks
 }: {
   content: string;
   id: string;
@@ -151,7 +152,7 @@ function TaskTableEntry({
             if (!isNumberParsable(displayed)) {
               throw new TypeError("New value for table column 'earn' must be a number parsable string.");
             }
-            return { ...task, e: Number(displayed) };
+            return { ...task, earn: Number(displayed) };
           case "group":
             return { ...task, category: displayed };
         }

@@ -3,6 +3,7 @@
 import { sql } from "@vercel/postgres";
 import { z } from "zod";
 import { TaskTableHeader } from "../../ui/main/tasks/task-table";
+import { isNumberParsable } from "@/lib/utils";
 
 const entryUpdateSchema = z.object({
   entryText: z.string(),

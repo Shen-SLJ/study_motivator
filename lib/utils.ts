@@ -4,6 +4,6 @@
  * 
  * @param value a value to test
  */
-function isNumberParsable(value: any) {
+export function isNumberParsable(value: any) {
   return !isNaN(Number(value))
 }
