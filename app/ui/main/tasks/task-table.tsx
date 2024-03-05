@@ -148,7 +148,7 @@ function TaskTableEntry({
           case "description":
             return { ...task, description: displayed };
           case "earn":
-            if (isNaN(Number(content))) {
+            if (isNaN(Number(displayed))) {
               throw new TypeError("New value for table column 'earn' must be a number parsable string.");
             }
             return { ...task, e: Number(displayed) };
