@@ -2,15 +2,14 @@
 
 import Image from "next/image";
 import { Task } from "@/app/api/tasks/route";
-import { HTMLInputTypeAttribute, useEffect, useRef, useState } from "react";
+import { Dispatch, HTMLInputTypeAttribute, SetStateAction, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { editTaskTableEntry } from "@/app/(main)/tasks/actions";
+import { editTaskTableDBEntry } from "@/app/(main)/tasks/actions";
 
-export type TaskTableHeader = "description" | "group" | "earn"
+export type TaskTableHeader = "description" | "group" | "earn";
 
 /**
  * Task table. Table frows to fill remaining available space of container.
- * @todo Edit filteredTasks on task table entry edit
  */
 export default function TaskTable() {
   const [tasks, setTasks] = useState<Array<Task>>([]);
@@ -70,13 +69,13 @@ export default function TaskTable() {
                   {i !== 0 && <hr className="border-[#3C477D] mb-3" />}
                   <div key={task.id} className="flex items-center mb-3">
                     <div className="basis-6/12">
-                      <TaskTableEntry content={task.description} id={task.id} column="description" />
+                      <TaskTableEntry content={task.description} id={task.id} column="description" tasks={tasks} setTasks={setTasks} />
                     </div>
                     <div className="basis-2/12">
-                      <TaskTableEntry content={task.category} id={task.id} column="group" />
+                      <TaskTableEntry content={task.category} id={task.id} column="group" tasks={tasks} setTasks={setTasks} />
                     </div>
                     <div className="basis-2/12">
-                      <TaskTableEntry content={task.earn} id={task.id} column="earn" type="number" />
+                      <TaskTableEntry content={String(task.earn)} id={task.id} column="earn" type="number" tasks={tasks} setTasks={setTasks} />
                     </div>
                     <span className="basis-2/12 pl-0.5">
                       <Image src="/tasktable-go.png" width="14" height="17" alt="Resume task" />
@@ -104,30 +103,68 @@ export default function TaskTable() {
  * @param id the id for the entry
  * @param column the column the entry is associated with
  * @param type the type of input when editing. default is text
+ * @param tasks the unfiltered list of tasks presented in the table
+ * @param setTasks setter in TaskTable to set the tasks state
  */
-function TaskTableEntry({ content, id, column, type }: { content: string | number; id: string, column: TaskTableHeader, type?: HTMLInputTypeAttribute }) {
+function TaskTableEntry({
+  content,
+  id,
+  column,
+  type,
+  tasks,
+  setTasks,
+}: {
+  content: string;
+  id: string;
+  column: TaskTableHeader;
+  type?: HTMLInputTypeAttribute;
+  tasks: Array<Task>;
+  setTasks: Dispatch<SetStateAction<Task[]>>;
+}) {
   const [editing, setEditing] = useState(false);
   const [displayed, setDisplayed] = useState(content);
   const inputElement = useRef<HTMLInputElement>(null);
 
-  const editEntryWithID = editTaskTableEntry.bind(null, id, column);
+  const editDBEntryWithID = editTaskTableDBEntry.bind(null, id, column);
 
   // Clicking outside the element will return it to default display mode
   function handleDocumentClick(e: MouseEvent) {
     if (inputElement.current && !inputElement.current.contains(e.target as Node)) {
-      setEditing(false)
+      setEditing(false);
     }
   }
   useEffect(() => {
     document.addEventListener("click", handleDocumentClick);
     return () => {
       document.removeEventListener("click", handleDocumentClick);
-    }
+    };
   });
+
+  // Update the task contents for the parent task table on edit (for search purposes)
+  function updateOnEdit() {
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === id) {
+        switch (column) {
+          case "description":
+            return { ...task, description: displayed };
+          case "earn":
+            if (isNaN(Number(content))) {
+              throw new TypeError("New value for table column 'earn' must be a number parsable string.");
+            }
+            return { ...task, e: Number(displayed) };
+          case "group":
+            return { ...task, category: displayed };
+        }
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+    setEditing(false);
+  }
 
   if (editing) {
     return (
-      <form action={editEntryWithID} onSubmit={() => setEditing(false)}>
+      <form action={editDBEntryWithID} onSubmit={updateOnEdit}>
         <input
           className="caret-white bg-transparent rounded-lg [&::-webkit-inner-spin-button]:appearance-none"
           name="entryText"
@@ -146,29 +183,3 @@ function TaskTableEntry({ content, id, column, type }: { content: string | numbe
     </button>
   );
 }
-
-
-// Self Notes
-// We need flex flex-col for top div, otherwise table h-full will cause table overshoot at bottom of page
-// due to not accounting for search bar height (h-full uses 100% of parent div's height value as px)
-
-// Empty regex returns empty matches for any string at index 0
-
-// autoFocus for input element in TaskTableEntry is React's implementation of autofocus
-// https://react.dev/reference/react-dom/components/input
-
-// Refs:
-// Detect click outside: https://stackoverflow.com/questions/32553158/detect-click-outside-react-component, https://react.dev/reference/react-dom/components/common see ref attribute, https://developer.mozilla.org/en-US/docs/Web/API/Node/contains.
-// useRef is null to ensure correct type for ref attribute in common elements (components)
-
-// Events:
-// Type errors https://stackoverflow.com/questions/71193818/react-onclick-argument-of-type-eventtarget-is-not-assignable-to-parameter-of-t
-
-// Removing spinner in integer input
-// Note: [...], where ... = CSS selector. & = this element
-// https://tailwindcss.com/docs/hover-focus-and-other-states#using-arbitrary-variants.
-// https://tailwindcss.com/docs/adding-custom-styles#arbitrary-properties
-// https://stackoverflow.com/questions/73666015/nested-brackets-and-ampersand-usage-in-tailwind-ui-examples 
-// https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
-// https://stackoverflow.com/questions/75879418/how-to-remove-arrows-in-input-type-number-inside-the-input 
-// https://stackoverflow.com/questions/71296535/how-to-remove-arrow-on-input-type-number-with-tailwind-css

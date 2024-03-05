@@ -16,7 +16,7 @@ const entryUpdateSchema = z.object({
  * @param formData form data
  * @todo proper error handling for NaN number coercion for entryText
  */
-export async function editTaskTableEntry(id: string, column: TaskTableHeader, formData: FormData) {
+export async function editTaskTableDBEntry(id: string, column: TaskTableHeader, formData: FormData) {
   const { entryText } = entryUpdateSchema.parse({
     entryText: formData.get("entryText"),
   });
@@ -40,7 +40,7 @@ export async function editTaskTableEntry(id: string, column: TaskTableHeader, fo
 
     case "earn":
       if (isNaN(Number(entryText))) {
-        return; // TODO: Error handling
+        throw new TypeError("Table column 'earn' must be a number parsable string."); // TODO: Error handling
       }
       await sql`
         UPDATE tasks
