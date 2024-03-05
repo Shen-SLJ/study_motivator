@@ -125,7 +125,6 @@ function TaskTableEntry({
   const [editing, setEditing] = useState(false);
   const [displayed, setDisplayed] = useState(content);
   const inputElement = useRef<HTMLInputElement>(null);
-
   const editDBEntryWithID = editTaskTableDBEntry.bind(null, id, column);
 
   // Clicking outside the element will return it to default display mode
