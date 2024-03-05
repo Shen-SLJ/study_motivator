@@ -39,7 +39,7 @@ export async function editTaskTableDBEntry(id: string, column: TaskTableHeader, 
       break;
 
     case "earn":
-      if (isNaN(Number(entryText))) {
+      if (!isNumberParsable(entryText)) {
         throw new TypeError("Table column 'earn' must be a number parsable string."); // TODO: Error handling
       }
       await sql`
