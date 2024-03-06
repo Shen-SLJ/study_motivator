@@ -98,7 +98,7 @@ export default function TaskTable() {
 }
 
 /**
- * An entry in the task table. Can be clicked on to edit contents. 
+ * An entry in the task table. Can be clicked on to edit contents.
  *
  * @param content the content that should be displayed by the entry. Must be parsable to the listed type for the following column values: 'earn' - number
  * @param id the id for the entry
@@ -113,7 +113,7 @@ function TaskTableEntry({
   column,
   type,
   tasks,
-  setTasks
+  setTasks,
 }: {
   content: string;
   id: string;
@@ -125,7 +125,6 @@ function TaskTableEntry({
   const [editing, setEditing] = useState(false);
   const [displayed, setDisplayed] = useState(content);
   const inputElement = useRef<HTMLInputElement>(null);
-  const editDBEntryWithID = editTaskTableDBEntry.bind(null, id, column);
 
   // Clicking outside the element will return it to default display mode
   function handleDocumentClick(e: MouseEvent) {
@@ -146,13 +145,16 @@ function TaskTableEntry({
       if (task.id === id) {
         switch (column) {
           case "description":
+            editTaskTableDBEntry({ ...task, description: displayed });
             return { ...task, description: displayed };
           case "earn":
             if (!isNumberParsable(displayed)) {
               throw new TypeError("New value for table column 'earn' must be a number parsable string.");
             }
+            editTaskTableDBEntry({ ...task, earn: Number(displayed) });
             return { ...task, earn: Number(displayed) };
           case "group":
+            editTaskTableDBEntry({ ...task, category: displayed });
             return { ...task, category: displayed };
         }
       }
@@ -164,7 +166,7 @@ function TaskTableEntry({
 
   if (editing) {
     return (
-      <form action={editDBEntryWithID} onSubmit={updateOnEdit}>
+      <form onSubmit={updateOnEdit}>
         <input
           className="caret-white bg-transparent rounded-lg [&::-webkit-inner-spin-button]:appearance-none"
           name="entryText"

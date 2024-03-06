@@ -1,58 +1,41 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
+import { Task } from "@/app/api/tasks/route";
 import { z } from "zod";
-import { TaskTableHeader } from "../../ui/main/tasks/task-table";
-import { isNumberParsable } from "@/lib/utils";
 
-const entryUpdateSchema = z.object({
-  entryText: z.string(),
+const taskSchema = z.object({
+  id: z.string(),
+  description: z.string(),
+  category: z.string(),
+  earn: z.number()
 });
+
 
 /**
  * Update the task table entry in the DB
  *
- * @param id the id of the record to update
- * @param column the task table column corresponding to edited data
- * @param formData form data
- * @todo proper error handling for NaN number coercion for entryText
+ * @param task the task to update
+ * @todo type validation via zod (ts is a runtime language)
  */
-export async function editTaskTableDBEntry(id: string, column: TaskTableHeader, formData: FormData) {
-  const { entryText } = entryUpdateSchema.parse({
-    entryText: formData.get("entryText"),
-  });
-
-  switch (column) {
-    case "description":
-      await sql`
-        UPDATE tasks
-        SET description=${entryText}
-        WHERE id=${id}
-      `;
-      break;
-
-    case "group":
-      await sql`
-        UPDATE tasks
-        SET category=${entryText}
-        WHERE id=${id}
-      `;
-      break;
-
-    case "earn":
-      if (!isNumberParsable(entryText)) {
-        throw new TypeError("Table column 'earn' must be a number parsable string."); // TODO: Error handling
-      }
-      await sql`
-        UPDATE tasks
-        SET earn=${entryText}
-        WHERE id=${id}
-      `;
-      break;
-  }
+export async function editTaskTableDBEntry(task: Task) {
+  const { id, description, category, earn } = taskSchema.parse({
+    id: task.id,
+    description: task.description,
+    category: task.category,
+    earn: task.earn
+  })
+  
+  await sql`
+    UPDATE tasks
+    SET description=${description}, category=${category}, earn=${earn}
+    WHERE id=${id}
+  `
 }
 
 // SELF Notes
 // Column names cannot be dynamic in SQL. Causes $1 error.
 // https://github.com/prisma/prisma/issues/5083
 // https://stackoverflow.com/questions/37845663/node-postgres-1-is-null-error
+
+// Need type validation despite TS strong-typing (auto validation). TS still allows wrong types to be passed! TS only shows editor side errors
